@@ -1,12 +1,9 @@
-import { App, Editor, MarkdownView, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { Editor, MarkdownView, Plugin } from 'obsidian';
 
 interface SpoilerCalloutSettings {
-    rgb: string;
 }
 
-const DEFAULT_SETTINGS: SpoilerCalloutSettings = {
-    rgb: '138, 92, 245'
-}
+const DEFAULT_SETTINGS: SpoilerCalloutSettings = {}
 
 // noinspection JSUnusedGlobalSymbols
 export default class SpoilerCallout extends Plugin {
@@ -32,13 +29,9 @@ export default class SpoilerCallout extends Plugin {
                 editor.replaceSelection('> [!spoiler]- Spoiler\n> Spoiler text');
             }
         });
-
-        // This adds a settings tab so the user can configure various aspects of the plugin
-        this.addSettingTab(new SampleSettingTab(this.app, this));
     }
 
     onunload() {
-
     }
 
     async loadSettings() {
@@ -47,31 +40,5 @@ export default class SpoilerCallout extends Plugin {
 
     async saveSettings() {
         await this.saveData(this.settings);
-    }
-}
-
-class SampleSettingTab extends PluginSettingTab {
-    plugin: SpoilerCallout;
-
-    constructor(app: App, plugin: SpoilerCallout) {
-        super(app, plugin);
-        this.plugin = plugin;
-    }
-
-    display(): void {
-        const {containerEl} = this;
-
-        containerEl.empty();
-
-        new Setting(containerEl)
-            .setName('Colour')
-            .setDesc('The colour of the spoiler callout in RGB (0-255)')
-            .addText(text => text
-                .setPlaceholder('255, 255, 255')
-                .setValue(this.plugin.settings.rgb)
-                .onChange(async (value) => {
-                    this.plugin.settings.rgb = value;
-                    await this.plugin.saveSettings();
-                }));
     }
 }
